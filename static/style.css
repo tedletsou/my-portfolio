@@ -43,53 +43,6 @@ ul, li {
 
 }
 
-nav {
-
-	--border-color: oklch(50% 10% 200 / 40%);
-
-	/* Turns on flexbox for the navigation window */
-	display: flex;
-	margin-bottom: 2em;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	/*border-bottom-color: oklch(80% 3% 200);*/
-	border-bottom-color: var(--border-color);
-
-
-	/* Apply some style to the links my nav bar */
-	a {
-
-		flex: 1;
-		text-decoration: none;
-		color: inherit;
-		text-align: center;
-		padding: 0.5em;
-
-	}
-
-	.current{
-
-		border-bottom-width: 0.4em;
-		border-bottom-style: solid;
-		border-bottom-color: var(--border-color);
-		padding-bottom: 0.4em;
-		font-weight: bold;
-
-	}
-
-	a:hover {
-
-		border-bottom-width: 0.4em;
-		border-bottom-style: solid;
-		border-bottom-color: var(--color-accent);
-		padding-bottom: 0.4em;
-		/*background-color: oklch(from var(--color-accent) 95% 5% h);*/
-		background-color: color-mix(in oklch, var(--color-accent), canvas 95%);
-
-	}
-
-}
-
 form {
 
 	display: grid;
@@ -123,26 +76,7 @@ img {
 
 }
 
-.projects {
 
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-	gap: 1em;
-
-	articles {
-
-		grid-template-rows: subgrid;
-		grid-row: span 3;
-	
-	}
-
-	h2 {
-
-		margin: 0;
-
-	}
-
-}
 
 h1 {
 

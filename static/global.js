@@ -11,43 +11,43 @@ function $$ (selector, context = document) {
 // 	currentLink.classList.add("current");
 // }
 
-let pages = {
-    ".": "Home",
-    "projects": "Projects",
-    "cv": "CV",
-    "contact": "Contact",
-    "https://github.com/tedletsou": "Profile",
-};
+// let pages = {
+//     ".": "Home",
+//     "projects": "Projects",
+//     "cv": "CV",
+//     "contact": "Contact",
+//     "https://github.com/tedletsou": "Profile",
+// };
 
-let nav = document.createElement("nav");
-document.body.prepend(nav)
+// let nav = document.createElement("nav");
+// document.body.prepend(nav)
 
-// looping over pages and creating links
-for (let url in pages) {
-	let title = pages[url];
+// // looping over pages and creating links
+// for (let url in pages) {
+// 	let title = pages[url];
 
-    // // Check if we are on the home page
-    // const ARE_WE_HOME = document.documentElement.classList.contains("home");
-    // if (!ARE_WE_HOME && !url.startsWith("http")) {
-    //     url = "../" + url;
-    // }
+//     // // Check if we are on the home page
+//     // const ARE_WE_HOME = document.documentElement.classList.contains("home");
+//     // if (!ARE_WE_HOME && !url.startsWith("http")) {
+//     //     url = "../" + url;
+//     // }
 
-    // Create link and add it to nav
-    let a = document.createElement("a");
-    a.href = url;
-    a.textContent = title;
-    nav.append(a);
+//     // Create link and add it to nav
+//     let a = document.createElement("a");
+//     a.href = url;
+//     a.textContent = title;
+//     nav.append(a);
 
-    if (a.host === location.host && a.pathname === location.pathname) {
-        a.classList.add("current");
-    }
+//     if (a.host === location.host && a.pathname === location.pathname) {
+//         a.classList.add("current");
+//     }
 
-    // unsure why this isn't working...
-    if (a.host !== location.host) {
-        a.target = "_blank";
-    }
+//     // unsure why this isn't working...
+//     if (a.host !== location.host) {
+//         a.target = "_blank";
+//     }
     
-};
+// };
 
 document.body.insertAdjacentHTML("afterbegin", `
 	<label class="color-scheme">
