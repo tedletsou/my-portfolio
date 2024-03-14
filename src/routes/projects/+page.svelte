@@ -3,6 +3,8 @@ import projects from '$lib/projects.json';
 import Project from "$lib/Project.svelte";
 </script>
 
+
+
 <!-- <pre>{ JSON.stringify(projects, null, "\t") }</pre> -->
 
 <svelte:head>
@@ -11,28 +13,28 @@ import Project from "$lib/Project.svelte";
 
 <style>
 
-    .projects {
+.projects {
     
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
     gap: 1em;
     
-    articles {
+articles {
     
-        grid-template-rows: subgrid;
-        grid-row: span 3;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
     
-    }
+}
     
-    h2, h3 {
+h2, h3 {
     
-        margin: 0;
+    margin: 0;
     
-    }
+}
     
-    }
+}
     
-    </style>
+</style>
     
     
 

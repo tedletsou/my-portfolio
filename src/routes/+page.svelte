@@ -1,6 +1,19 @@
 <script>
+    
     import projects from '$lib/projects.json';
     import Project from "$lib/Project.svelte";
+    // let profileData = fetch("https://api.github.com/users/tedletsou");
+
+
+    // let profileData = {
+    //     ok: true,
+    //     json: async () => ({
+    //         followers: 100,
+    //         following: 100,
+    //         public_repos: 100,
+    //         public_gists: 100,
+    //     })
+    // };
 </script>
 
 <svelte:head>
@@ -30,6 +43,29 @@ h2, h3 {
 
 }
 
+.stats {
+
+    dl {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    dt {
+        grid-row: 1; 
+        font-size: 0.85em;
+        color: #888;
+    }
+
+    dd {
+        grid-row: 2; 
+        color: #333; /* darker text color for dd elements */
+        font-size: 1.5em; /* larger font size for dd elements */
+    }
+
+
+}
+
 </style>
 
     
@@ -43,14 +79,55 @@ h2, h3 {
         </ul>
     </nav>  -->
 
-    <h1>Ted Letsou</h1>
-    <img src="images/ted_headshot_v6.jpg"
-        alt="Headshot of Ted Letsou" />
-    <p> Hi everyone!  Welcome to my website.  I know it doesn't look like much right now, but just you wait . . .</p>
+<h1>Ted Letsou</h1>
+<img src="images/ted_headshot_v6.jpg"
+    alt="Headshot of Ted Letsou" />
+<p> Hi everyone!  Welcome to my website.  I know it doesn't look like much right now, but just you wait . . .</p>
 
-    <h2>Recent Projects</h2>
-        <div class="projects">
-            {#each projects.slice(0, 3) as p}
-            <Project info={p} hLevel=3/>
-            {/each}
-        </div>
+<section class="stats">
+
+    <h2> My GitHub Stats</h2>
+
+    {#await fetch("https://api.github.com/users/tedletsou") }
+        <p>Loading...</p>
+
+    {:then response}
+        {#await response.json()}
+            <p>Decoding...</p>
+        {:then data}
+
+            <dl>
+                <dt>FOLLOWERS</dt>
+                <dd>{ data.followers }</dd>
+
+                <dt>FOLLOWING</dt>
+                <dd>{ data.following }</dd>
+
+                <dt>PUBLIC REPOS</dt>
+                <dd>{ data.public_repos }</dd>
+
+                <dt>PUBLIC GISTS</dt>
+                <dd>{ data.public_gists }</dd>
+            </dl>
+            
+        {:catch error}
+            <p class="error">
+                Something went wrong: {error.message}
+            </p>
+        {/await}
+
+    {:catch error}
+        <p class="error">
+            Something went wrong: {error.message}
+        </p>
+    {/await}
+
+</section>
+
+
+<h2>Recent Projects</h2>
+<div class="projects">
+    {#each projects.slice(0, 3) as p}
+    <Project info={p} hLevel=3/>
+    {/each}
+</div>
