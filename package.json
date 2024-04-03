@@ -10,6 +10,8 @@
 
         "dev": "vite dev",
 
+        "prebuild": "npx elocuent -d static,src -o static/loc.csv",
+
         "build": "vite build",
 
         "preview": "vite preview"
@@ -25,6 +27,8 @@
         "@sveltejs/kit": "^2.0.0",
 
         "@sveltejs/vite-plugin-svelte": "^3.0.0",
+
+        "elocuent": "^0.0.3",
 
         "svelte": "^5.0.0-next.71",
 
