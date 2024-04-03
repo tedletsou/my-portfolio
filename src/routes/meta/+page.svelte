@@ -58,8 +58,26 @@
 
     const yScale = d3.scaleLinear()
         .domain([0, 24]) // Hours of the day
-        .range([height, 0]) // SVG's height to 0 (inverted because SVG's Y axis is inverted)
+        .range([0, height]) // SVG's height to 0 (inverted because SVG's Y axis is inverted)
         .nice(); // Extend the domain to nice round values
+
+    // let margin = {top: 10, right: 10, bottom: 30, left: 20};
+
+    // let usableArea = {
+    //     top: margin.top,
+    //     right: width - margin.right,
+    //     bottom: height - margin.bottom,
+    //     left: margin.left
+    // };
+    // usableArea.width = usableArea.right - usableArea.left;
+    // usableArea.height = usableArea.bottom - usableArea.top;
+
+    // let xAxis, yAxis;
+
+    // $: {
+    //     d3.select(xAxis).call(d3.axisBottom(xScale));
+    //     d3.select(yAxis).call(d3.axisLeft(yScale));
+    // }
 
 </script>
 
@@ -74,6 +92,9 @@
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}">
 
+    <!-- <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
+    <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} /> -->
+
     <g class="dots">
         {#each commits as commit, index }
             <circle
@@ -84,7 +105,7 @@
             />
         {/each}
     </g>
-	<!-- scatterplot will go here -->
+
 </svg>
 
 <h2>Summary</h2>
@@ -108,7 +129,7 @@
         <dd>{maxPeriod}</dd>
 
         <dt>NUMBER OF COMMITS</dt>
-        <dd>{d3.group(data, d => d.commits).size}</dd>
+        <dd>{d3.group(data, d => d.commit).size}</dd>
 
     </dl>
 
