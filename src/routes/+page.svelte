@@ -43,29 +43,6 @@ h2, h3 {
 
 }
 
-.stats {
-
-    dl {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: auto auto;
-    }
-
-    dt {
-        grid-row: 1; 
-        font-size: 0.85em;
-        color: #888;
-    }
-
-    dd {
-        grid-row: 2; 
-        color: #333; /* darker text color for dd elements */
-        font-size: 1.5em; /* larger font size for dd elements */
-    }
-
-
-}
-
 </style>
 
     
