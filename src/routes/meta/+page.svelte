@@ -4,9 +4,19 @@
 
     import { onMount } from "svelte";
 
+    import Pie from "$lib/Pie.svelte";
+
+    import {
+        computePosition,
+        autoPlacement,
+        offset,
+    } from '@floating-ui/dom';
+
     let data = [];
 
     let commits = [];
+    
+    let commitTooltip;
     
     let width = 1000, height = 600;
 
@@ -43,6 +53,8 @@
             return ret;
 
         });
+
+        console.log(commits)
 
     });
 
@@ -97,6 +109,61 @@
     let hoveredIndex = -1;
     $: hoveredCommit = commits[hoveredIndex] ?? {};
 
+    // Cursor position 
+
+    let tooltipPosition = {x: 0, y: 0};
+
+    async function dotInteraction (index, evt) {
+        if (evt.type === "mouseenter" || evt.type === "focus") {
+            hoveredIndex = index,
+            tooltipPosition = {x: evt.x, y: evt.y}
+        }
+        else if (evt.type === "mouseleave" || evt.type === "blur") {
+            hoveredIndex = -1
+        }
+
+        let hoveredDot = evt.target;
+
+        tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+            strategy: "fixed", // because we use position: fixed
+            middleware: [
+                offset(5), // spacing from tooltip to dot
+                autoPlacement() // see https://floating-ui.com/docs/autoplacement
+            ],
+        });
+
+    }
+
+    let brushSelection;
+    function brushed (evt) {
+        brushSelection = evt.selection;
+    }
+
+    // brushing
+    let svg
+    $: {
+        d3.select(svg).call(d3.brush().on("start brush end", brushed));
+        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    }
+
+    function isCommitSelected (commit) {
+        if (!brushSelection) {
+            return false;
+        }
+        let min = {x: brushSelection[0][0], y: brushSelection[0][1]};
+        let max = {x: brushSelection[1][0], y: brushSelection[1][1]};
+        let x = xScale(commit.date);
+        let y = yScale(commit.hourFrac);
+        return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    }
+
+    $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    $: hasSelection = brushSelection && selectedCommits.length > 0;
+
+    $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
+    $: languageBreakdown = d3.rollups(selectedLines, lines => lines.length, line => line.type);
+
+    const formatPercentage = d3.format(".1~%");
 </script>
 
 <style>
@@ -109,47 +176,61 @@
     }
 
     circle {
-        transition: 200ms;
+        transition: 500ms;
+        transform-origin: center;
+        transform-box: fill-box;
 
         &:hover {
             transform: scale(1.5);
         }
 
-        transform-origin: center;
-        transform-box: fill-box;
+        
     }
 
     dl.info {
         display: grid;
-        grid-template-columns: max-content auto; /* First column for dt, second for dd */
-        gap: 0.5em 1em; /* Space between rows and columns */
-        margin: 0; /* Remove default margin */
-        padding: 0.5em; /* Padding for the layout */
+        grid-template-columns: max-content auto; 
+        gap: 0.5em 1em; 
+        margin: 0; 
+        padding: 1em; 
         font-size: 0.85em;
         color: #888;
+
+        /* ... other styles ... */
+        transition-duration: 500ms;
+        transition-property: opacity, visibility;
+
+        &[hidden]:not(:hover, :focus-within) {
+            opacity: 0;
+            visibility: hidden;
+        }
     }
 
     dl.info dt {
-        color: #888; /* Less prominent color for labels */
+        color: #888; 
     }
 
     dl.info dd {
-        margin: 0; /* Remove default margin for dd */
-        color: #333; /* darker text color for dd elements */
-        font-size: 1em; /* larger font size for dd elements */
+        margin: 0; 
+        color: #333; 
+        font-size: 1em; 
     }
-
-        /* Style for the tooltip */
+    
+    /* Style for the tooltip */
     .tooltip {
         position: fixed;
         top: 1em;
         left: 1em;
-        background-color: white; /* Background color for the tooltip */
+        background-color: oklch(100% 0% 0 / 80%); /* Background color for the tooltip */
         border: 1px solid #ddd; /* Border for the tooltip */
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        padding: 0.5em;
+        /* box-shadow: 2px 2px 5px rgba(0,0,0,0.2); */
+        padding: 1em;
         border-radius: 4px;
-        z-index: 1000;
+        box-shadow: 3px 3px 3px;
+    }
+
+    .selected {
+        fill: red;
     }
 
 </style>
@@ -157,7 +238,10 @@
 <h1>Meta</h1>
 
 <h2>Commits by time of day</h2>
-<svg viewBox="0 0 {width} {height}">
+
+<p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+
+<svg viewBox="0 0 {width} {height}" bind:this = {svg}>
 
     <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
     <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
@@ -166,12 +250,18 @@
     <g class="dots">
         {#each commits as commit, index }
             <circle
-                cx={ xScale(commit.datetime) }
+                class:selected={isCommitSelected(commit)}
+                cx={ xScale(commit.date) }
                 cy={ yScale(commit.hourFrac) }
                 r="5"
                 fill="steelblue"
-                on:mouseenter={evt => hoveredIndex = index}
-                on:mouseleave={evt => hoveredIndex = -1}
+                tabindex="0"
+                aria-describedby="commit-tooltip"
+                aria-haspopup="true"
+                on:mouseenter={evt => dotInteraction(index, evt)}
+                on:mouseleave={evt => dotInteraction(index, evt)}
+                on:focus={evt => dotInteraction(index, evt)}
+                on:blur={evt => dotInteraction(index, evt)}
             />
         {/each}
 
@@ -180,15 +270,16 @@
 </svg>
 
 <!-- Information about data points-->
-<dl id="commit-tooltip" class="info tooltip">
+<dl id="commit-tooltip" class="info tooltip" hidden={hoveredIndex === -1} style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px" bind:this={commitTooltip} role="tooltip">
+    
 	<dt>COMMIT</dt>
 	<dd><a href="{ hoveredCommit.url }" target="_blank">{ hoveredCommit.id }</a></dd>
 
 	<dt>DATE</dt>
-	<dd>{ hoveredCommit.datetime?.toLocaleString("en", {date: "full"}) }</dd>
+	<dd>{ hoveredCommit.datetime?.toLocaleString("en", {date: "short"}) }</dd>
 
     <dt>TIME</dt>
-	<dd>{ hoveredCommit.datetime?.toLocaleString("en", {time: "full"}) }</dd>
+	<dd>{ hoveredCommit.time?.toLocaleString("en", {date: "long"})}</dd>
 
     <dt>AUTHOR</dt>
 	<dd>{ hoveredCommit.author?.toLocaleString("en") }</dd>
@@ -196,7 +287,6 @@
     <dt>LINES EDITED</dt>
 	<dd>{ hoveredCommit.totalLines?.toLocaleString("en") }</dd>
 
-	<!-- Add: Time, author, lines edited -->
 </dl>
 
 <h2>Summary</h2>
@@ -225,3 +315,17 @@
     </dl>
 
 </section>
+
+<section class="stats">
+    <dl>
+    {#each languageBreakdown as [language, lines] }
+
+        <dt>{language}</dt>
+        <dd>{lines} lines, {formatPercentage(lines / selectedLines.length)}</dd>
+
+    {/each}
+    </dl>
+</section>
+
+
+<Pie data={Array.from(languageBreakdown).map(([language, lines]) => ({label: language, value: lines}))} />
