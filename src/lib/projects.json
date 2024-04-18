@@ -1,27 +1,38 @@
 [
     {
+        "title": "Lab 8: Geospatial visualizations",
+        "year": "2024",
+        "image": "images/lab8.png",
+        "description": "In this lab, we will be building an immersive, interactive map visualization of bike traffic in the Boston area during different times of the day, shown in the screencast above",
+        "url": "https://tedletsou.github.io/pedalwatch/"
+    },
+    {
         "title": "A4: Persuasive or Deceptive Visualization?",
         "year": "2024",
         "image": "images/neg.svg",
-        "description": "A burning truth, Rising global surface temperatures are plotted for each year, dating back to 1960. The temperature has risen over 1.5 degrees over the past 40 years, with no stop in sight. Climate-related disasters are noted along different dates in the figure."
+        "description": "A burning truth, Rising global surface temperatures are plotted for each year, dating back to 1960. The temperature has risen over 1.5 degrees over the past 40 years, with no stop in sight. Climate-related disasters are noted along different dates in the figure.",
+        "url": "https://tedletsou.github.io/A4/"
     },
     {
         "title": "A3: Visualization Design",
         "year": "2024",
         "image": "images/hifigure_final.svg",
-        "description": "The above figure compares the census data from 1900 and 2000 in order to answer whether there is a skew towards which sex has a longer life expectancy. The graphic is title Do women really live longer?. The census data from 1900 shows no particular skew, while the census data from 2000 shows that there are more reported women ages 70 and up compared to men."
+        "description": "The above figure compares the census data from 1900 and 2000 in order to answer whether there is a skew towards which sex has a longer life expectancy. The graphic is title Do women really live longer?. The census data from 1900 shows no particular skew, while the census data from 2000 shows that there are more reported women ages 70 and up compared to men.",
+        "url": "https://tedletsou.github.io/A3/"
     },
     {
         "title": "A2: Exploratory Data Analysis",
         "year": "2024",
         "image": "images/A2.svg",
-        "description": "What surprised me the most about the articles were the number of flips that occured in the Boston area. However, there have been many flips (as per the definition of the dataset) that have occured over the last 23 years in the Boston area. This is shown geographically in the above figure with all transacations in the Boston area marked in either blue (a flip) or red (other). A large number of flips have occured in Backbay, downtown, and North end --- all expensive zip codes."
+        "description": "What surprised me the most about the articles were the number of flips that occured in the Boston area. However, there have been many flips (as per the definition of the dataset) that have occured over the last 23 years in the Boston area. This is shown geographically in the above figure with all transacations in the Boston area marked in either blue (a flip) or red (other). A large number of flips have occured in Backbay, downtown, and North end --- all expensive zip codes.",
+        "url": "https://tedletsou.github.io/A2/"
     },
     {
         "title": "Nozaki–Bekki solitons in semiconductor lasers",
         "year": "2024",
         "image": "images/NB.svg",
-        "description": "Exercitationem aut nulla non, culpa vero perspiciatis qui beatae architecto quidem maxime magni tenetur suscipit commodi dicta illo enim? Soluta voluptatem, laborum voluptatum quas labore cum. Aperiam exercitationem quas numquam?"
+        "description": "Exercitationem aut nulla non, culpa vero perspiciatis qui beatae architecto quidem maxime magni tenetur suscipit commodi dicta illo enim? Soluta voluptatem, laborum voluptatum quas labore cum. Aperiam exercitationem quas numquam?",
+        "url": "https://www.nature.com/articles/s41586-023-06915-7"
     },
     {
         "title": "Driven bright solitons on a mid-infrared laser chip",
