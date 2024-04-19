@@ -26,7 +26,7 @@
 div{
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 5fr 10fr;
+    grid-template-columns: 10fr 10fr;
     background: hsl(0 0% 100% / 90%);
     box-shadow: 0 0 .2em .2em hsl(0 0% 100% / 90%);
 
@@ -62,7 +62,7 @@ div{
 
 <dl class="files">
 	{#each files as file (file.name) }
-        <div animate:flip={ {delay:10, duration:100}}>
+        <div animate:flip={ {delay:10, duration:1000}}>
 			<dt>
 				<code>{file.name}</code>
                 <small>{file.lines.length} lines</small>
