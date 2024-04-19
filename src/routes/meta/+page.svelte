@@ -66,11 +66,24 @@
     $: timeScale = timeScale.domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
     $: commitMaxTime = timeScale.invert(commitProgress);
 
+    // scaling the commits from 0 to 100
+    let raceProgress = 100;
+    let raceMaxTime; 
+    let raceScale = d3.scaleTime();
+    $: raceScale = raceScale.domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
+    $: raceMaxTime = raceScale.invert(raceProgress);
+
     // Filtering the commits
     let filteredCommits;
     let filteredLines;
     $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
     $: filteredLines = data.filter((d) => d.datetime < commitMaxTime);
+
+     // Filtering the race commits
+    let raceCommits;
+    let raceLines;
+    $: raceCommits = commits.filter((commit) =>  commit.datetime < raceMaxTime);
+    $: raceLines = data.filter((d) => d.datetime < raceMaxTime);
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: averageFileLength = d3.mean(fileLengths, d => d[1]);
@@ -80,8 +93,9 @@
 
     let selectedCommits = [];
     $: hasSelection = selectedCommits.length > 0;
-    $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
+    $: selectedLines = (hasSelection ? selectedCommits : filteredCommits).flatMap(d => d.lines);
     $: languageBreakdown = d3.rollups(selectedLines, lines => lines.length, line => line.type);
+    // $: languageBreakdown = d3.rollups(selectedLines, v => d3.sum(v, d => d.length), d => d.type);
 
     const formatPercentage = d3.format(".1~%");
 </script>
@@ -164,7 +178,7 @@
 	</svelte:fragment>
 </Scrolly>
 
-<Scrolly bind:progress={commitProgress} --scrolly-layout="viz-first" --scrolly-viz-width="1.5fr">
+<Scrolly bind:progress={raceProgress} --scrolly-layout="viz-first" --scrolly-viz-width="1.5fr">
 	{#each commits as commit, index }
         <p>
             On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})},
